@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -25,8 +26,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Login
+// Login & Register
 Route::get('/login', [LoginController::class, 'showLoginForm']);
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
 Route::post('/user_login', [AuthController::class, 'login']);
 Route::post('/user_register', [AuthController::class, 'register']);
 
@@ -99,16 +103,23 @@ Route::get('/set-language-get', function (Request $request) {
 // routes/web.php
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/movies/search', [MovieController::class, 'search']);
-
+Route::get('/', [MovieController::class, 'index']);
 Route::get('/movies', [MovieController::class, 'index']);
 Route::get('/movies/{id}', [MovieController::class, 'show']);
 
+Route::get('/movies/filter', [MovieController::class, 'filter']);
+
 
 // routes/web.php
-Route::get('/login/phone',         [PhoneLoginController::class, 'index'])->name('phone.login');
-Route::post('/login/phone/otp',    [PhoneLoginController::class, 'sendOtp'])->name('phone.otp.send');
-Route::post('/login/phone/verify', [PhoneLoginController::class, 'verifyOtp'])->name('phone.otp.verify');
 
-Route::get('/test-phone', function () {
-    return response()->json(['success' => true, 'message' => 'Route working']);
+Route::get('/admin/dashboard', [AdminController::class, 'index']);
+
+// Debug: check if view file is resolvable
+Route::get('/_debug_view_exists', function () {
+    return response()->json([
+        'view' => 'admin_frontend.components.layout',
+        'exists' => view()->exists('admin_frontend.components.layout')
+    ]);
 });
+
+

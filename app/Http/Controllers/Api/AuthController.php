@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    public function user() {
+        $users = User::all();
+        return response()->json([
+            'message' => 'Success',
+            'data' => $users
+        ]);
+    }
     public function login(Request $request)
     {
         // Validate
@@ -93,9 +101,13 @@ class AuthController extends Controller
     {
         // 1. Validate request
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required|string|same:password',
+            'country' => 'nullable|string|max:100',
+            'terms' => 'required|accepted',
         ]);
 
         if ($validator->fails()) {
@@ -105,14 +117,17 @@ class AuthController extends Controller
         }
 
         // 2. Create user
-        User::create([
-            'name' => $request->name,
+        $user = User::create([
+            'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // 3. Redirect to login page with success message
-        return redirect('/login')->with('success', 'Registration successful! Please login.');
+        // 3. Log the user in
+        Auth::login($user);
+
+        // 4. Redirect to home with success message
+        return redirect('/')->with('success', 'Registration successful! Welcome!');
     }
 
 

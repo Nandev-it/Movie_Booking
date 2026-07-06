@@ -11,6 +11,7 @@ use App\Http\Controllers\MovieController;
 
 
 
+Route::get('/users', [AuthController::class, 'user']);
 Route::post('/user_login', [AuthController::class, 'login']);
 Route::get('/status', [AuthController::class, 'index']);
 

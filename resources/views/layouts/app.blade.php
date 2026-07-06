@@ -17,6 +17,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&family=Cinzel:wght@400..900&family=Dangrek&family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Hanuman:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Libertinus+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Noto+Sans+Khmer:wght@100..900&family=Noto+Serif+Khmer:wght@100..900&family=Roboto+Slab:wght@100..900&family=Suwannaphum:wght@100;300;400;700;900&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 </head>
@@ -24,36 +26,21 @@
 <body style="background-image: url('{{ asset('assets/bg-venom.png') }}');"
     class="bg-cover bg-center bg-no-repeat min-h-screen">
 
-    <!-- ❌ Desktop Block Message -->
-    {{-- <div class="hidden lg:flex h-screen items-center justify-center bg-black/80 text-white text-center px-6">
-        <div>
-            <h1 class="text-3xl font-bold mb-4">
-                Mobile Only Website
-            </h1>
-            <p class="text-lg text-gray-300">
-                Please open this movie booking system on a mobile phone or tablet.
-            </p>
-        </div>
-    </div> --}}
-
-    <!-- ✅ Mobile / Tablet Layout -->
-    {{-- If want to hide desktop layout add lg:hidden --}}
     <div class=" bg-black/80 text-white min-h-screen">
 
         @include('components.header')
 
         <main class="py-25 max-w-7xl mx-auto px-4 suwannaphum-thin ">
             @yield('content')
-            {{-- @include('components.cardmovie') --}}
         </main>
 
-        {{-- @include('components.footer') --}}
+        @include('components.footer')
 
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    {{-- ✅ Alpine.js for dynamic components --}}
+    {{-- Alpine.js for dynamic components --}}
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <script>
@@ -113,7 +100,10 @@
                                 };
                                 // Dispatch event to notify other components
                                 window.dispatchEvent(new CustomEvent('language-changed', {
-                                    detail: { locale: lang, translations: data.translations }
+                                    detail: {
+                                        locale: lang,
+                                        translations: data.translations
+                                    }
                                 }));
                             }
                         });
@@ -129,17 +119,18 @@
     </script>
 
 
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&family=Cinzel:wght@400..900&family=Dangrek&family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Hanuman:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Libertinus+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Noto+Sans+Khmer:wght@100..900&family=Noto+Serif+Khmer:wght@100..900&family=Roboto+Slab:wght@100..900&family=Suwannaphum:wght@100;300;400;700;900&display=swap');
+
         [x-cloak] {
             display: none;
         }
 
-        .suwannaphum-thin {
+        /* .suwannaphum-thin {
             font-family: "Suwannaphum", serif;
             font-weight: 100;
             font-style: normal;
-        }
+        } */
 
         @keyframes playPulse {
 
@@ -157,6 +148,16 @@
 
         .animate-play {
             animation: playPulse 1.5s infinite ease-in-out;
+        }
+
+        /* Hide scrollbar while keeping scroll functionality */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
     </style>
 

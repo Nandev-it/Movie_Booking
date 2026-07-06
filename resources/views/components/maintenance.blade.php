@@ -22,7 +22,7 @@
 
         <!-- Logo -->
         <h1 class="text-3xl font-bold text-black mb-6">
-            Nan<span class="text-purple-500">Flex</span>
+            Cineverse<span class="text-red-500"> Legend</span>
         </h1>
 
         <!-- Title -->
@@ -56,9 +56,9 @@
         </div>
 
         <!-- Email -->
-        <p class="text-sm text-gray-700">
-            nanflex@gmail.com
-        </p>
+        <a href="mailto:cinverselegend855@gmail.com" class="text-sm text-gray-700">
+            cinverselegend855@gmail.com
+        </a>
 
 
         <div class="block mt-6">

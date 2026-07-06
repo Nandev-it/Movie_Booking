@@ -1,7 +1,7 @@
 <header x-data="headerComponent()" x-init="init()" class="relative z-50">
 
     <!-- Desktop Header -->
-    <div :class="scrolled ? 'bg-[#0d0f14]/95 shadow-lg' : 'bg-transparent'"
+    <div :class="scrolled ? 'backdrop-blur-md bg-white/[0.07] shadow-lg' : 'bg-transparent'"
         class="hidden md:block fixed top-0 left-0 right-0 text-white transition-all duration-300 z-50 border-b border-white/[0.06]">
 
         <div class="max-w-7xl mx-auto px-8 h-[68px] flex items-center gap-8">

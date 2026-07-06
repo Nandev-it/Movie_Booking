@@ -82,9 +82,6 @@
                             {{ $movie->genre ?? 'Movie' }}
                         </span>
 
-                        <span class="bg-gray-800 px-3 py-1 rounded-full flex items-center gap-1">
-                            ⭐ {{ $movie->rating ?? '4.0' }}
-                        </span>
 
                         @if ($movie->duration)
                             <span class="bg-gray-800 px-3 py-1 rounded-full">
