@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::defaultView('vendor.pagination.custom');
         App::setLocale(session('locale', 'en'));
         // Force HTTPS in production (helps @vite load assets correctly on Vercel)
-        // if (app()->environment('production')) {
-        //     URL::forceScheme('https');
-        // }
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
