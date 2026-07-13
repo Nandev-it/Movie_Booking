@@ -38,7 +38,7 @@ Route::post('/user_register', [AuthController::class, 'register']);
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/');
-});
+})->name('logout');
 
 // Profile routes (protected by auth middleware)
 Route::middleware('auth')->group(function () {
