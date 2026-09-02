@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -19,7 +20,13 @@ class AuthController extends Controller
             'data' => $users
         ]);
     }
-    public function login(Request $request)
+
+    public function authDashboard(Request $request)
+    {
+        $tab = $request->query('tab', 'auth/dashboard');
+        return view('admin_frontend.auth.login', compact('tab'));
+    }
+    public function authSignIn(Request $request)
     {
         // Validate
         $request->validate([
@@ -62,7 +69,9 @@ class AuthController extends Controller
         }
 
         // If Web request
-        return redirect('/');
+        return redirect('/admin/dashboard')
+            ->with('success', 'Login successfully!')
+            ->with('welcome_name', trim($user->first_name . ' ' . $user->last_name));
     }
 
     // public function register(Request $request)
@@ -97,7 +106,7 @@ class AuthController extends Controller
     // }
 
 
-    public function register(Request $request)
+    public function authSignUp(Request $request)
     {
         // 1. Validate request
         $validator = Validator::make($request->all(), [
@@ -106,7 +115,6 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'password_confirmation' => 'required|string|same:password',
-            'country' => 'nullable|string|max:100',
             'terms' => 'required|accepted',
         ]);
 
@@ -118,16 +126,19 @@ class AuthController extends Controller
 
         // 2. Create user
         $user = User::create([
-            'name' => $request->first_name . ' ' . $request->last_name,
+            'uuid' => (string) Str::uuid(),
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'token_url' => Str::random(60),
         ]);
 
         // 3. Log the user in
         Auth::login($user);
 
-        // 4. Redirect to home with success message
-        return redirect('/')->with('success', 'Registration successful! Welcome!');
+        // 4. Redirect to auth dashboard with success message
+        return redirect('/auth/dashboard/')->with('success', 'Registration successful! Welcome!');
     }
 
 

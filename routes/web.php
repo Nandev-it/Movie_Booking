@@ -27,17 +27,17 @@ Route::get('/', function () {
 });
 
 // Login & Register
-Route::get('/login', [LoginController::class, 'showLoginForm']);
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-Route::post('/user_login', [AuthController::class, 'login']);
-Route::post('/user_register', [AuthController::class, 'register']);
+
+// Route::get('/register', function () {
+//     return redirect()->route('auth.dashboard', ['tab' => 'register']);
+// })->name('register');
+// Route::post('/user_login', [AuthController::class, 'login']);
+// Route::post('/user_register', [AuthController::class, 'register']);
 
 // Logout
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/');
+    return redirect('/auth/dashboard');
 })->name('logout');
 
 // Profile routes (protected by auth middleware)
@@ -112,7 +112,36 @@ Route::get('/movies/filter', [MovieController::class, 'filter']);
 
 // routes/web.php
 
-Route::get('/admin/dashboard', [AdminController::class, 'index']);
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/movies', function () {
+        return view('admin_frontend.pages.movie');
+    })->name('admin.movies');
+
+
+    Route::put('/admin/movies/{movie}', [MovieController::class, 'update'])->name('admin.movies.update');
+    Route::delete('/admin/movies/{movie}', [MovieController::class, 'destroy'])->name('admin.movies.destroy');
+    
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
+    Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
+    Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::patch('/admin/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('admin.users.role');
+    Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+});
+
+Route::middleware(['auth'])->prefix('admin/profile')->name('admin.profile.')->group(function () {
+    Route::get('/admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+    Route::put('/', [ProfileController::class, 'update'])->name('update');
+
+    Route::get('/email', [ProfileController::class, 'editEmail'])->name('email.edit');
+    Route::put('/email', [ProfileController::class, 'updateEmail'])->name('email.update');
+
+    Route::get('/password', [ProfileController::class, 'editPassword'])->name('password.edit');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
 
 // Debug: check if view file is resolvable
 Route::get('/_debug_view_exists', function () {
@@ -122,4 +151,7 @@ Route::get('/_debug_view_exists', function () {
     ]);
 });
 
-
+Route::get('/auth/dashboard', [AuthController::class, 'authDashboard'])->name('login');
+// Route::get('/auth/dashboard', [AuthController::class, 'authDashboard'])->name('auth.dashboard');
+Route::post('/auth/signin', [AuthController::class, 'authSignIn']);
+Route::post('/auth/signup', [AuthController::class, 'authSignUp']);

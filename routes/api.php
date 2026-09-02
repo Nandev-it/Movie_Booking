@@ -17,4 +17,5 @@ Route::get('/status', [AuthController::class, 'index']);
 
 
 Route::get('/movies', [MovieController::class, 'lists']);
+Route::get('/movies/search', [MovieController::class, 'search']);
 

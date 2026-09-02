@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use Twilio\Rest\Client;
 
@@ -31,9 +32,11 @@ class PhoneLoginController extends Controller
             $user = User::firstOrCreate(
                 ['phone' => $request->phone],
                 [
-                    'name'     => 'User ' . $request->phone,
-                    'email'    => $request->phone . '@phone.cinebook.com',
-                    'password' => Hash::make(uniqid()),
+                    'uuid'       => (string) Str::uuid(),
+                    'first_name' => 'User',
+                    'last_name'  => $request->phone,
+                    'email'      => $request->phone . '@phone.cinebook.com',
+                    'password'   => Hash::make(uniqid()),
                 ]
             );
 

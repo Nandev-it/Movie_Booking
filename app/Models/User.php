@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 use Laravel\Sanctum\HasApiTokens;
 
@@ -21,12 +22,26 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'uuid',
+        'first_name',
+        'last_name',
         'email',
-        'phone',
         'password',
+        'token_url',
+        'role',
+        'phone',
         'phone_otp',
         'phone_otp_expires_at',
+        'avatar',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'name',
     ];
 
     /**
@@ -50,5 +65,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $user) {
+            if (empty($user->uuid)) {
+                $user->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    public function getNameAttribute(): string
+    {
+        return trim(sprintf('%s %s', $this->first_name ?? '', $this->last_name ?? ''));
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 }

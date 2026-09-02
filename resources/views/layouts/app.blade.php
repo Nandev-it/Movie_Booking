@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Movie Booking')</title>
 
-    @vite('resources/css/app.css')
+    {{-- @vite('resources/css/app.css') --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('assets/icons/logo.png') }}" type="image/x-icon">
