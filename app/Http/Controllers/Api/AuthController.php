@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 
-    public function user() {
+    public function user()
+    {
         $users = User::all();
         return response()->json([
             'message' => 'Success',
@@ -26,86 +27,78 @@ class AuthController extends Controller
         $tab = $request->query('tab', 'auth/dashboard');
         return view('admin_frontend.auth.login', compact('tab'));
     }
-    public function authSignIn(Request $request)
+    // public function authSignIn(Request $request)
+    // {
+    //     // Validate
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required|string',
+    //     ]);
+
+    //     // Find user
+    //     $user = User::where('email', $request->email)->first();
+
+    //     if (!$user || !Hash::check($request->password, $user->password)) {
+
+    //         // If API request
+    //         if ($request->expectsJson()) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Invalid credentials'
+    //             ], 401);
+    //         }
+
+    //         // If Web request
+    //         return back()->withErrors([
+    //             'email' => 'Invalid credentials'
+    //         ]);
+    //     }
+
+    //     // Login session
+    //     Auth::login($user);
+
+    //     // Create token (API)
+    //     $token = $user->createToken('api-token')->plainTextToken;
+
+    //     // If API request
+    //     if ($request->expectsJson()) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'user' => $user,
+    //             'token' => $token
+    //         ]);
+    //     }
+
+    //     // If Web request
+    //     return redirect('/admin/dashboard')
+    //         ->with('success', 'Login successfully!')
+    //         ->with('welcome_name', trim($user->first_name . ' ' . $user->last_name));
+    // }
+
+    // Sign In API 
+    public function login(Request $request)
     {
-        // Validate
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string',
+            'password' => 'required',
         ]);
 
-        // Find user
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-
-            // If API request
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Invalid credentials'
-                ], 401);
-            }
-
-            // If Web request
-            return back()->withErrors([
-                'email' => 'Invalid credentials'
-            ]);
-        }
-
-        // Login session
-        Auth::login($user);
-
-        // Create token (API)
-        $token = $user->createToken('api-token')->plainTextToken;
-
-        // If API request
-        if ($request->expectsJson()) {
             return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'token' => $token
-            ]);
+                'message' => 'The email or password is incorrect.'
+            ], 401);
         }
 
-        // If Web request
-        return redirect('/admin/dashboard')
-            ->with('success', 'Login successfully!')
-            ->with('welcome_name', trim($user->first_name . ' ' . $user->last_name));
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful.',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
-
-    // public function register(Request $request)
-    // {
-    //     // 1. Validate request
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email',
-    //         'password' => 'required|string|min:6',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'errors' => $validator->errors()
-    //         ], 422);
-    //     }
-
-    //     // 2. Create user
-    //     $user = User::create([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => Hash::make($request->password),
-    //     ]);
-
-    //     // 3. Return success response
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'User registered successfully',
-    //         'user' => $user
-    //     ], 201);
-    // }
-
-
     public function authSignUp(Request $request)
     {
         // 1. Validate request
